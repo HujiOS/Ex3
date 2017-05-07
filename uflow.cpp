@@ -47,8 +47,8 @@ private:
 public:
     WordProto(string word):_word(word){};
     ~WordProto(){};
-    bool operator<(const WordProto &other) const override{
-        return _word < other._word;
+    bool operator<(const k2Base &other) const override{
+        return _word < ((WordProto&)other)._word;
     }
     const char* get() const{
         return _word.c_str();
@@ -71,8 +71,8 @@ private:
 public:
     WordFinished(string word):_word(word){};
     ~WordFinished(){};
-    bool operator<(const WordFinished &other){
-        return _word < other._word;
+    bool operator<(const k3Base &other){
+        return _word < ((WordFinished&)other)._word;
     }
     string get(){
         return _word;
@@ -95,12 +95,13 @@ public:
 
 
 class myMapReduce : MapReduceBase{
-    vector<levelTwoPair> Map(const DName *const key, const myNull *const val){
+    vector<levelTwoPair> Map(const k1Base *const key, const v1Base *const val){
         vector<levelTwoPair> ret;
+
 
         DIR *pDIR;
         struct dirent *entry;
-        if(pDIR=opendir(key->get()) ){
+        if(pDIR=opendir(((DName*)key)->get()) ){
             while(entry = readdir(pDIR)){
                 if(entry -> d_type == isFile)           // necessary? do we want folders also? if so we have the root thing commented below
                 {

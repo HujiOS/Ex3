@@ -1,11 +1,15 @@
 
+#include <iostream>
+
+#include "MapReduceClient.h"
+
 using namespace std;
 
 void listFile();
 
 int main(int argc, char* argv[]){
 
-    string substr = *argv[1];
+    char *substr = argv[1];
 
     for(int i = 2; i<argc; ++i)
     {
