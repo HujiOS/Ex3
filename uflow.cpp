@@ -4,23 +4,34 @@ using namespace std;
 #include <utility>
 #include "MapReduceClient.h"
 #include "MapReduceFramework.h"
+#include<stdio.h>
+#include<cstdlib>
+#include<iostream>
+#include<string.h>
+#include<fstream>
+#include<dirent.h>
+
+
+
 typedef pair<WordProto, OneList> levelTwoPair;
 typedef pair<WordProto, vector<OneList>> ShufflePair;
 typedef pair<WordFinished, LastCounter> levelThreePair;
 
+const unsigned char isFile =0x8;
 
-class fname : k1Base{
+
+class DName : k1Base{
 private:
     string _file;
 public:
-    fname(string filename):_file(filename){}
-    ~fname(){
+    DName(string filename):_file(filename){}
+    ~DName(){
     }
-    bool operator<(const fname &other){
+    bool operator<(const DName &other){
         return _file < other._file;
     }
-    string get(){
-        return _file;
+    const char* get() const{
+        return _file.c_str();
     }
 };
 
@@ -39,8 +50,8 @@ public:
     bool operator<(const WordProto &other){
         return _word < other._word;
     }
-    string get(){
-        return _word;
+    const char* get() const{
+        return _word.c_str();
     }
 };
 
@@ -60,7 +71,7 @@ private:
 public:
     WordFinished(string word):_word(word){};
     ~WordFinished(){};
-    bool operator<(const WordProto &other){
+    bool operator<(const WordFinished &other){
         return _word < other._word;
     }
     string get(){
@@ -84,14 +95,20 @@ public:
 
 
 class myMapReduce : MapReduceBase{
-    vector<levelTwoPair> Map(const fname *const key, const myNull *const val){
-        vector<levelTwoPair> wlist;
-        ifstream ifs(key->get());
-        string line;
-        while(getline(ifs, line)){
-            wlist.add(levelTwoPair(WordProto(line), OneList()));
+    vector<levelTwoPair> Map(const DName *const key, const myNull *const val){
+        DIR *pDIR;
+        struct dirent *entry;
+        if(pDIR=opendir(key->get()) ){
+            while(entry = readdir(pDIR)){
+                if(entry -> d_type == isFile)           // necessary? do we want folders also? if so we have the root thing commented below
+                {
+                    //if( strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0) //DONT DELETE UNTIL WE KNOW IF
+                    //WE WANT FILES ONLY OR ALSO FOLDERS
+                    cout << entry->d_name << "\n";
+                }
+            }
+            closedir(pDIR);
         }
-        return wlist;
     };
 
     vector<levelThreePair> Reduce(const k2Base *const key, const V2_VEC &vals){
