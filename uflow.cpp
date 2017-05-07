@@ -47,7 +47,7 @@ private:
 public:
     WordProto(string word):_word(word){};
     ~WordProto(){};
-    bool operator<(const WordProto &other){
+    bool operator<(const WordProto &other) const override{
         return _word < other._word;
     }
     const char* get() const{
@@ -96,6 +96,8 @@ public:
 
 class myMapReduce : MapReduceBase{
     vector<levelTwoPair> Map(const DName *const key, const myNull *const val){
+        vector<levelTwoPair> ret;
+
         DIR *pDIR;
         struct dirent *entry;
         if(pDIR=opendir(key->get()) ){
