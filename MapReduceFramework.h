@@ -8,6 +8,7 @@ typedef std::pair<k1Base*, v1Base*> IN_ITEM;
 typedef std::pair<k3Base*, v3Base*> OUT_ITEM;
 
 typedef std::vector<IN_ITEM> IN_ITEMS_VEC; 
+
 typedef std::vector<OUT_ITEM> OUT_ITEMS_VEC;
 
 OUT_ITEMS_VEC RunMapReduceFramework(MapReduceBase& mapReduce, IN_ITEMS_VEC& itemsVec, 
