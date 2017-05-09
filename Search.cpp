@@ -11,12 +11,6 @@ using namespace std;
 #include<fstream>
 #include<dirent.h>
 
-
-
-typedef pair<WordProto, ContainsSubstrList> levelTwoPair;
-typedef pair<WordProto, vector<ContainsSubstrList>> ShufflePair;
-typedef pair<WordFinished, LastCounter> levelThreePair;
-
 const unsigned char isFile =0x8;
 
 
@@ -27,8 +21,9 @@ public:
     DName(string filename):_file(filename){}
     ~DName(){
     }
-    bool operator<(const DName &other){
-        return _file < other._file;
+    bool operator<(const k1Base &other) const{
+
+        return _file < ((DName&)other)._file;
     }
     const char* get() const{
         return _file.c_str();
@@ -79,7 +74,7 @@ private:
 public:
     WordFinished(string word):_word(word){};
     ~WordFinished(){};
-    bool operator<(const k3Base &other){
+    bool operator<(const k3Base &other) const{
         return _word < ((WordFinished&)other)._word;
     }
 
@@ -104,7 +99,6 @@ public:
 class myMapReduce : public MapReduceBase{
 private:
     string substring;
-
 public:
     myMapReduce(string sub)
     {
