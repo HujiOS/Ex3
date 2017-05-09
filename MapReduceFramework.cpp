@@ -19,12 +19,13 @@ typedef std::pair<k2Base*, v2Base*> TEMP_ITEM;
 typedef std::vector<TEMP_ITEM> TEMP_ITEMS_VEC;
 typedef std::pair<k2Base*, std::vector<v2Base*>> AFTER_SHUFFLE_PAIR;
 typedef std::vector<AFTER_SHUFFLE_PAIR> AFTER_SHUFFLE_VEC;
+typedef (usigned int *) compThread;
 
 // static vars
 static IN_ITEMS_VEC in_items;
 static OUT_ITEMS_VEC out_items;
 static unsigned long currInPos = 0;
-static std::map<pthread_t, TEMP_ITEMS_VEC> temp_elem_container;
+static std::map<compThread, TEMP_ITEMS_VEC> temp_elem_container;
 static std::vector<std::pair<k2Base*, std::vector<v2Base*>>> after_shuffle_vec;
 
 
@@ -61,7 +62,7 @@ void Emit2 (k2Base* k, v2Base* v){
     while(Emit2ContainerProtection == 0){}
 
     // get thread container
-    std::map<pthread_t, TEMP_ITEMS_VEC>::iterator it = temp_elem_container.find(pthread_self());
+    std::map<compThread, TEMP_ITEMS_VEC>::iterator it = temp_elem_container.find((compThread)pthread_self());
 
     // handle container finding errors
     if(it == temp_elem_container.end()){
@@ -111,7 +112,7 @@ void *ExecReduce(void *args){
 void *Shuffle(void *args){
     std::map<k2Base*, std::vector<v2Base*>> tempMap;
     std::map<k2Base*, std::vector<v2Base*>>::iterator vec;
-    while(!joinEnded){
+    while(!joinEnded){ // TODO check if temp_elem_conainer is empty. << in this loop using sem_getvalue
         sem_wait(&ShuffleSemaphore);// the sem_wait decrement the semaphore value so we should
         sem_post(&ShuffleSemaphore); // increment it :)
         for(auto pairContainer : temp_elem_container){
@@ -166,7 +167,7 @@ OUT_ITEMS_VEC RunMapReduceFramework(MapReduceBase& mapReduce, IN_ITEMS_VEC& item
             std::cerr << err_msg1 << "pthread_create " << err_msg2 << std::endl;
             exit(1);
         };
-        temp_elem_container.insert(std::pair<pthread_t, TEMP_ITEMS_VEC>(thread,TEMP_ITEMS_VEC()));
+        temp_elem_container.insert(std::pair<(compThread, TEMP_ITEMS_VEC>((compThread)thread,TEMP_ITEMS_VEC()));
         threads.push_back(thread);
     }
     Emit2ContainerProtection = 1; // enable emit2
