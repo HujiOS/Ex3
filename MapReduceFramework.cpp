@@ -41,7 +41,7 @@ static int Emit2ContainerProtection = 0;
 static bool joinEnded = false;
 static sem_t ShuffleSemaphore;
 static pthread_mutex_t curr_in_mutex = PTHREAD_MUTEX_INITIALIZER;
-static std::mutex log_mutex;
+static pthread_mutex_t log_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 /*
  * This function will pop a chunk of items (CHUNK DEFINED THERE ^^^)
@@ -100,14 +100,14 @@ void startMeasuringTime()
 
 void printTime(std::string s, double diff)
 {
-    log_mutex.lock();
+    pthread_mutex_lock(&log_mutex);
     logf << s << ' took ' << diff << ' ns\n';
-    log_mutex.unlock();
+    pthread_mutex_unlock(&log_mutex);
 }
 
 void openLogFile(int num)
 {
-    log_mutex.lock();
+    pthread_mutex_lock(&log_mutex);
     logf.open(".MapReduceFramework.log" ,std::fstream::in | std::fstream::out | std::fstream::app);
     if(logf.fail())
     {
@@ -116,15 +116,15 @@ void openLogFile(int num)
     }
     logf << "RunMapReduceFramework started with ";
     logf << num << " threads\n";
-    log_mutex.unlock();
+    pthread_mutex_unlock(&log_mutex);
 }
 
 void closeLogFile()
 {
-    log_mutex.lock();
+    pthread_mutex_lock(&log_mutex);
     logf << "RunMapReduceFramework finished\n";
     logf.close();
-    log_mutex.unlock();
+    pthread_mutex_unlock(&log_mutex);
 }
 
 void writeCreation(std::string type, bool creation)
@@ -133,14 +133,14 @@ void writeCreation(std::string type, bool creation)
     time_t t = time(0);   // get time now
     struct tm * now = localtime(&t);
 
-    log_mutex.lock();
+    pthread_mutex_lock(&log_mutex);
     logf << 'Thread ' << type + " " << creation;
     logf << '[' << now->tm_mday << '.'
          << (now->tm_mon + 1) << '.'
          <<  (now->tm_year + 1900) << " "
          <<  now -> tm_hour << ":" << now -> tm_min << ":"
          << now -> tm_sec << "]\n";
-    log_mutex.unlock();
+    pthread_mutex_unlock(&log_mutex);
 }
 
 double timeElapsed()
