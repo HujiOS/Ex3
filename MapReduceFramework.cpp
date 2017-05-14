@@ -190,8 +190,10 @@ void *Shuffle(void *args){
     writeCreation("Shuffle", true);
     std::map<k2Base*, std::vector<v2Base*>> tempMap;
     std::map<k2Base*, std::vector<v2Base*>>::iterator vec;
-    while(!joinEnded || sem_getvalue(&ShuffleSemaphore) != 0){
-		while(sem_getvalue(&ShuffleSemaphore) == 0 && !joinEnded);
+    int semVal = 0;
+    sem_getvalue(&ShuffleSemaphore, &semVal);
+    while(!joinEnded || semVal != 0){
+		while(semVal == 0 && !joinEnded);
         for(auto pairContainer : temp_elem_container){
             TEMP_ITEMS_VEC deleted_items;
             for(auto k2v2pair : pairContainer.second){ // second is TEMP_ITEMS_VEC
@@ -212,6 +214,7 @@ void *Shuffle(void *args){
             // we want to delete the items that we found
             pairContainer.second.erase(deleted_items.begin(), deleted_items.end());
         }
+        sem_getvalue(&ShuffleSemaphore, &semVal);
     }
     after_shuffle_vec.assign(tempMap.begin(), tempMap.end());
     tempMap.clear();
