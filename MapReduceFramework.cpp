@@ -1,25 +1,28 @@
-//
-// Created by omer on 5/8/17.
-//
-
 #include <cstdio>
 #include <map>
 #include <iostream>
 #include <mutex>
 #include <thread>
 #include <semaphore.h>
+#include <stdlib.h>
 #include "MapReduceFramework.h"
+#include <sys/time.h>
+#include <fstream>
 
 #define CHUNK 10
 #define err_msg1 "MapReduceFramework Failure: "
 #define err_msg2 "failed"
+
+
+
+
 
 // typedefs
 typedef std::pair<k2Base*, v2Base*> TEMP_ITEM;
 typedef std::vector<TEMP_ITEM> TEMP_ITEMS_VEC;
 typedef std::pair<k2Base*, std::vector<v2Base*>> AFTER_SHUFFLE_PAIR;
 typedef std::vector<AFTER_SHUFFLE_PAIR> AFTER_SHUFFLE_VEC;
-typedef (usigned int *) compThread;
+typedef unsigned int * compThread;
 
 // static vars
 static IN_ITEMS_VEC in_items;
@@ -27,6 +30,8 @@ static OUT_ITEMS_VEC out_items;
 static unsigned long currInPos = 0;
 static std::map<compThread, TEMP_ITEMS_VEC> temp_elem_container;
 static std::vector<std::pair<k2Base*, std::vector<v2Base*>>> after_shuffle_vec;
+static struct timeval s,e;
+static std::fstream logf;
 
 
 // mutexs
@@ -34,6 +39,7 @@ static int Emit2ContainerProtection = 0;
 static bool joinEnded = false;
 static sem_t ShuffleSemaphore;
 static pthread_mutex_t curr_in_mutex = PTHREAD_MUTEX_INITIALIZER;
+static std::mutex log_mutex;
 
 /*
  * This function will pop a chunk of items (CHUNK DEFINED THERE ^^^)
@@ -81,9 +87,74 @@ void Emit3 (k3Base* k, v3Base* v){
     out_items.push_back(OUT_ITEM(k,v));
 }
 
+void startMeasuringTime()
+{
+    if(gettimeofday(&s, NULL) != 0)
+    {
+        std::cerr << err_msg1 << "gettimeofday " << err_msg2 << std::endl;
+    }
+}
 
+void printTime(std::string s, double diff)
+{
+    log_mutex.lock();
+    logf << s << ' took ' << diff << ' ns\n';
+    log_mutex.unlock();
+}
+
+void openLogFile(int num)
+{
+    log_mutex.lock();
+    logf.open(".MapReduceFramework.log" ,std::fstream::in | std::fstream::out | std::fstream::app);
+    if(logf.fail())
+    {
+        std::cerr << err_msg1 << "file open " << err_msg2 << std::endl;
+        exit(1);
+    }
+    logf << "RunMapReduceFramework started with ";
+    logf << num << " threads\n";
+    log_mutex.unlock();
+}
+
+void closeLogFile()
+{
+    log_mutex.lock();
+    logf << "RunMapReduceFramework finished\n";
+    logf.close();
+    log_mutex.unlock();
+}
+
+void writeCreation(std::string type, bool creation)
+{
+    std::string action = creation ? "created " : "terminated ";
+    time_t t = time(0);   // get time now
+    struct tm * now = localtime(&t);
+
+    log_mutex.lock();
+    logf << 'Thread ' << type + " " << creation;
+    logf << '[' << now->tm_mday << '.'
+         << (now->tm_mon + 1) << '.'
+         <<  (now->tm_year + 1900) << " "
+         <<  now -> tm_hour << ":" << now -> tm_min << ":"
+         << now -> tm_sec << "]\n";
+    log_mutex.unlock();
+}
+
+double timeElapsed()
+{
+    double difference;
+    if(gettimeofday(&e, NULL) != 0)
+    {
+        std::cerr << err_msg1 << "gettimeofday " << err_msg2 << std::endl;
+    }
+    difference = (e.tv_sec - s.tv_sec) * 1.0e9;
+    difference += (e.tv_usec - s.tv_sec) * 1.0e3;
+
+    return difference;
+}
 
 void *ExecMap(void *args){
+    writeCreation("ExecMap", true);
     MapReduceBase *baseFunc = (MapReduceBase *) args;
     IN_ITEMS_VEC getData = popv1Chunk();
     while(getData.size() != 0){
@@ -92,10 +163,12 @@ void *ExecMap(void *args){
         }
         getData = popv1Chunk();
     }
+    writeCreation("ExecMap", false);
     return nullptr;
 }
 
 void *ExecReduce(void *args){
+    writeCreation("ExecReduce", true);
     MapReduceBase *baseFunc = (MapReduceBase *) args;
     AFTER_SHUFFLE_VEC getData = popv2Chunk();
     while(getData.size() != 0){
@@ -104,12 +177,14 @@ void *ExecReduce(void *args){
         }
         getData = popv2Chunk();
     }
+    writeCreation("ExecReduce", false);
     return nullptr;
 }
 
 
 // we should change K2,V2 to K2, Vector<V2>
 void *Shuffle(void *args){
+    writeCreation("Shuffle", true);
     std::map<k2Base*, std::vector<v2Base*>> tempMap;
     std::map<k2Base*, std::vector<v2Base*>>::iterator vec;
     while(!joinEnded){ // TODO check if temp_elem_conainer is empty. << in this loop using sem_getvalue
@@ -137,6 +212,7 @@ void *Shuffle(void *args){
     }
     after_shuffle_vec.assign(tempMap.begin(), tempMap.end());
     tempMap.clear();
+    writeCreation("Shuffle", false);
     return nullptr;
 }
 
@@ -148,6 +224,7 @@ OUT_ITEMS_VEC RunMapReduceFramework(MapReduceBase& mapReduce, IN_ITEMS_VEC& item
                                     int multiThreadLevel, bool autoDeleteV2K2){
     void* ret = NULL;
 
+    openLogFile(multiThreadLevel);
     // Running Map
     // save some vars
     std::vector<pthread_t> threads;
@@ -161,13 +238,14 @@ OUT_ITEMS_VEC RunMapReduceFramework(MapReduceBase& mapReduce, IN_ITEMS_VEC& item
     pthread_create(&shuffleThread, NULL, Shuffle, NULL);
 
     // create map threads (N)
+    startMeasuringTime();
     for(int i=0;i<multiThreadLevel;i++){
         pthread_t thread;
         if(pthread_create(&thread, NULL, ExecMap, (void *)&mapReduce)){
             std::cerr << err_msg1 << "pthread_create " << err_msg2 << std::endl;
             exit(1);
         };
-        temp_elem_container.insert(std::pair<(compThread, TEMP_ITEMS_VEC>((compThread)thread,TEMP_ITEMS_VEC()));
+        temp_elem_container.insert(std::pair<compThread, TEMP_ITEMS_VEC>((compThread)thread,TEMP_ITEMS_VEC()));
         threads.push_back(thread);
     }
     Emit2ContainerProtection = 1; // enable emit2
@@ -187,10 +265,14 @@ OUT_ITEMS_VEC RunMapReduceFramework(MapReduceBase& mapReduce, IN_ITEMS_VEC& item
     }
     threads.clear();
 
+    double diff = timeElapsed();
+    printTime("Map and Shuffle", diff);
+    startMeasuringTime();
 
     /// REDUCE Starts from here.
+
     currInPos = 0;
-    for(int i=0;i<multiThreadLevel;i++){
+    for(int i=0;i < multiThreadLevel; i++){
         pthread_t thread;
         if(pthread_create(&thread, NULL, ExecReduce, (void *)&mapReduce)){
             std::cerr << err_msg1 << "pthread_create " << err_msg2 << std::endl;
@@ -204,6 +286,9 @@ OUT_ITEMS_VEC RunMapReduceFramework(MapReduceBase& mapReduce, IN_ITEMS_VEC& item
             exit(1);
         } // we dont use this ret value.
     }
+    diff = timeElapsed();
+    printTime("Reduce", diff);
+
     garbageCollect(autoDeleteV2K2);
     return out_items;
 

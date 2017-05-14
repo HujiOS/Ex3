@@ -2,6 +2,9 @@
 // Created by Omer on 09/05/2017.
 //
 
+#include MapReduceClient.h
+
+
 bool k1Base::operator==(const k3Base &other) const
 {
     return this < other && other < this;
