@@ -190,9 +190,12 @@ void *Shuffle(void *args){
     writeCreation("Shuffle", true);
     std::map<k2Base*, std::vector<v2Base*>> tempMap;
     std::map<k2Base*, std::vector<v2Base*>>::iterator vec;
-    while(!joinEnded){ // TODO check if temp_elem_conainer is empty. << in this loop using sem_getvalue
-        sem_wait(&ShuffleSemaphore);// the sem_wait decrement the semaphore value so we should
-        sem_post(&ShuffleSemaphore); // increment it :) **I have some questions about this**
+	sem_wait(&ShuffleSemaphore);// we dont want to iterate will there`s no need to iterate so 
+							    // we`ll wait to the first Emit to start.
+								// its kind off a "Start shuffling Trigger"
+    sem_post(&ShuffleSemaphore); // increment it :)
+    while(!joinEnded && sem_getvalue(&ShuffleSemaphore) != 0){
+		while(sem_getvalue(&ShuffleSemaphore) == 0 && !joinEnded);
         for(auto pairContainer : temp_elem_container){
             TEMP_ITEMS_VEC deleted_items;
             for(auto k2v2pair : pairContainer.second){ // second is TEMP_ITEMS_VEC
