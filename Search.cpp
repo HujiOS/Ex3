@@ -10,6 +10,7 @@ using namespace std;
 #include<string>
 #include<fstream>
 #include<dirent.h>
+#include <cstring>
 
 const unsigned char isFile =0x8;
 
@@ -110,11 +111,11 @@ public:
         if(pDIR=opendir(((DName*)key)->get()) ){
             while(entry = readdir(pDIR)){
 
-                //if( strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0)
+                //if(entry -> d_type == isFile)
                 //DONT DELETE UNTIL WE KNOW IF
                 //WE WANT FILES ONLY OR ALSO FOLDERS
 
-                if(entry -> d_type == isFile)           // necessary? do we want folders also? if so we have the root thing commented below
+                if( strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0)
                 {
                     string s(entry->d_name);
                     WordProto *word = new WordProto(s);

@@ -23,7 +23,7 @@ typedef std::vector<TEMP_ITEM> TEMP_ITEMS_VEC;
 typedef std::pair<k2Base*, std::vector<v2Base*>> AFTER_SHUFFLE_PAIR;
 typedef std::vector<AFTER_SHUFFLE_PAIR> AFTER_SHUFFLE_VEC;
 typedef unsigned int * compThread;
-typedef std::vector<std::pair<k2Base*, std::vector<v2Base*>>>::iterator t2iter
+typedef std::vector<std::pair<k2Base*, std::vector<v2Base*>>>::iterator t2iter;
 
 
 // static vars
@@ -73,6 +73,8 @@ void Emit2 (k2Base* k, v2Base* v){
     // get thread container
     std::map<compThread, TEMP_ITEMS_VEC>::iterator it = temp_elem_container.find((compThread)pthread_self());
 
+    std::cout << "inEMIT2" << k << " " << v << std::endl;
+
     // handle container finding errors
     if(it == temp_elem_container.end()){
         std::cerr << err_msg1 << "finding container " << err_msg2 << std::endl;
@@ -101,7 +103,7 @@ void startMeasuringTime()
 void printTime(std::string s, double diff)
 {
     pthread_mutex_lock(&log_mutex);
-    logf << s << ' took ' << diff << ' ns\n';
+    logf << s << " took " << diff << " ns\n";
     pthread_mutex_unlock(&log_mutex);
 }
 
@@ -134,9 +136,9 @@ void writeCreation(std::string type, bool creation)
     struct tm * now = localtime(&t);
 
     pthread_mutex_lock(&log_mutex);
-    logf << 'Thread ' << type + " " << creation;
-    logf << '[' << now->tm_mday << '.'
-         << (now->tm_mon + 1) << '.'
+    logf << "Thread " << type + " " << creation;
+    logf << "[" << now->tm_mday << "."
+         << (now->tm_mon + 1) << "."
          <<  (now->tm_year + 1900) << " "
          <<  now -> tm_hour << ":" << now -> tm_min << ":"
          << now -> tm_sec << "]\n";
@@ -193,6 +195,7 @@ void *Shuffle(void *args){
     int semVal = 0;
     sem_getvalue(&ShuffleSemaphore, &semVal);
     while(!joinEnded || semVal != 0){
+        std::cout << "WHAHAHA" << std::endl;
 		while(semVal == 0 && !joinEnded);
         for(auto pairContainer : temp_elem_container){
             TEMP_ITEMS_VEC deleted_items;
@@ -255,7 +258,7 @@ OUT_ITEMS_VEC RunMapReduceFramework(MapReduceBase& mapReduce, IN_ITEMS_VEC& item
     // create shuffleThread (1)
     pthread_t shuffleThread;
     pthread_create(&shuffleThread, NULL, Shuffle, NULL);
-
+    std::cout << "shuffle created" << std::endl;
     // create map threads (N)
     startMeasuringTime();
     for(int i=0;i<multiThreadLevel;i++){
@@ -267,6 +270,8 @@ OUT_ITEMS_VEC RunMapReduceFramework(MapReduceBase& mapReduce, IN_ITEMS_VEC& item
         temp_elem_container.insert(std::pair<compThread, TEMP_ITEMS_VEC>((compThread)thread,TEMP_ITEMS_VEC()));
         threads.push_back(thread);
     }
+
+    std::cout << "all threads created" << std::endl;
     Emit2ContainerProtection = 1; // enable emit2
     for(auto tthread : threads){
         if(pthread_join(tthread, &ret)){
@@ -277,6 +282,11 @@ OUT_ITEMS_VEC RunMapReduceFramework(MapReduceBase& mapReduce, IN_ITEMS_VEC& item
     // we are sending this post in special cases that the
     sem_post(&ShuffleSemaphore);
     // join ended
+
+    std::cout << "all joined" << std::endl;
+
+
+
     joinEnded = true;
     if(pthread_join(shuffleThread, &ret)){
         std::cerr << err_msg1 << "pthread_join " << err_msg2 << std::endl;
@@ -289,7 +299,7 @@ OUT_ITEMS_VEC RunMapReduceFramework(MapReduceBase& mapReduce, IN_ITEMS_VEC& item
     startMeasuringTime();
 
     /// REDUCE Starts from here.
-
+    std::cout << "reducinng" << std::endl;
     currInPos = 0;
     for(int i=0;i < multiThreadLevel; i++){
         pthread_t thread;
@@ -307,6 +317,8 @@ OUT_ITEMS_VEC RunMapReduceFramework(MapReduceBase& mapReduce, IN_ITEMS_VEC& item
     }
     diff = timeElapsed();
     printTime("Reduce", diff);
+
+    std::cout << "finito" << std::endl;
 
     deleteRemainsV2K2(autoDeleteV2K2);
     return out_items;
