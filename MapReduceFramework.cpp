@@ -23,6 +23,8 @@ typedef std::vector<TEMP_ITEM> TEMP_ITEMS_VEC;
 typedef std::pair<k2Base*, std::vector<v2Base*>> AFTER_SHUFFLE_PAIR;
 typedef std::vector<AFTER_SHUFFLE_PAIR> AFTER_SHUFFLE_VEC;
 typedef unsigned int * compThread;
+typedef std::vector<std::pair<k2Base*, std::vector<v2Base*>>>::iterator t2iter
+
 
 // static vars
 static IN_ITEMS_VEC in_items;
@@ -57,7 +59,8 @@ IN_ITEMS_VEC popv1Chunk(){
 AFTER_SHUFFLE_VEC popv2Chunk(){
     pthread_mutex_lock(&curr_in_mutex);
     size_t nextChunk = currInPos + CHUNK > after_shuffle_vec.size() ? currInPos - after_shuffle_vec.size() : CHUNK;
-    AFTER_SHUFFLE_VEC tempVec = AFTER_SHUFFLE_VEC(after_shuffle_vec.begin()+currInPos, after_shuffle_vec.begin()+(currInPos+nextChunk));
+    AFTER_SHUFFLE_VEC tempVec = AFTER_SHUFFLE_VEC(after_shuffle_vec.begin()+currInPos, after_shuffle_vec.begin()
+                                                                                       +(currInPos+nextChunk));
     currInPos += nextChunk;
     pthread_mutex_unlock(&curr_in_mutex);
     return tempVec; // nullptr will mark that the vec was ended
@@ -189,7 +192,7 @@ void *Shuffle(void *args){
     std::map<k2Base*, std::vector<v2Base*>>::iterator vec;
     while(!joinEnded){ // TODO check if temp_elem_conainer is empty. << in this loop using sem_getvalue
         sem_wait(&ShuffleSemaphore);// the sem_wait decrement the semaphore value so we should
-        sem_post(&ShuffleSemaphore); // increment it :)
+        sem_post(&ShuffleSemaphore); // increment it :) **I have some questions about this**
         for(auto pairContainer : temp_elem_container){
             TEMP_ITEMS_VEC deleted_items;
             for(auto k2v2pair : pairContainer.second){ // second is TEMP_ITEMS_VEC
@@ -200,7 +203,8 @@ void *Shuffle(void *args){
                     tempMap.insert(std::pair<k2Base*, std::vector<v2Base*>>(k2v2pair.first, std::vector<v2Base*>()));
                     tempMap.find(k2v2pair.first)->second.push_back(k2v2pair.second);
                 }
-                else{
+                else
+                {
                     vec->second.push_back(k2v2pair.second);
                 }
                 deleted_items.push_back(k2v2pair);
@@ -216,8 +220,21 @@ void *Shuffle(void *args){
     return nullptr;
 }
 
-void garbageCollect(bool deletev2){
-    //TODO this function..
+void deleteRemainsV2K2(bool deletev2){
+    if(!deletev2)
+    {
+        return;
+    }
+
+    for(t2iter i = after_shuffle_vec.begin(); i < after_shuffle_vec.end(); ++i)
+    {
+        for(auto value: i -> second) {
+            delete value;
+        }
+        delete i -> first;
+    }
+
+
 }
 
 OUT_ITEMS_VEC RunMapReduceFramework(MapReduceBase& mapReduce, IN_ITEMS_VEC& itemsVec,
@@ -289,8 +306,6 @@ OUT_ITEMS_VEC RunMapReduceFramework(MapReduceBase& mapReduce, IN_ITEMS_VEC& item
     diff = timeElapsed();
     printTime("Reduce", diff);
 
-    garbageCollect(autoDeleteV2K2);
+    deleteRemainsV2K2(autoDeleteV2K2);
     return out_items;
-
-
 }
