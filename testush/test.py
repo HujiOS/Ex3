@@ -16,7 +16,7 @@ for dir in DIRS:
     if(os.path.exists(dir)):
         shutil.rmtree(dir)
     os.mkdir(dir)
-for elem in npr.choice(f,350):
+for elem in npr.choice(f,4000):
     dir = npr.choice(DIRS)
     if(npr.randint(0,2) == 1):
         g = open(os.path.join(dir, '%s.%s'%(elem[:-1],npr.choice(extensions))),'w')

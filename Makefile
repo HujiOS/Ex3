@@ -17,7 +17,7 @@ TARFLAGS=-cvf
 TARNAME=ex2.tar
 TARSRCS=$(LIBSRC) Makefile README
 
-all: search
+all: Search
 
  
 libMapReduceFramework.o: libMapReduceFramework.cpp libMapReduceFramework.h
@@ -27,7 +27,7 @@ libMapReduceFramework.a: $(LIBOBJ)
 	$(AR) $(ARFLAGS) $@ $^
 	$(RANLIB) $@
 
-search: Search.o libMapReduceFramework.a
+Search: Search.o libMapReduceFramework.a
 	$(CC) $^ $(LOADLIBES) -lMapReduceFramework -o $@ -lpthread
 
 Search.o: Search.cpp
@@ -42,12 +42,18 @@ depend:
 tara:
 	$(TAR) $(TARFLAGS) $(TARNAME) $(TARSRCS)
 
-ctest:
-	cp -f ex2.tar ex2sanity
-
-rtest:
-	python3 ex2sanity/test.py
+jona:
+	mv -f Search jonas/Test_496/Search; \
+	mv -f libMapReduceFramework.a jonas/Framework/MapReduceFramework.a; \
+	cd jonas; \
+	./compile_suite; \
+	./run_suite; \
+	cd ..;
+jonarun:
+	cd jonas; \
+	./run_suite; \
+	cd ..;
 
 val:
-	valgrind --show-leak-kinds=all --leak-check=full test
+	valgrind --show-leak-kinds=all -v --leak-check=full search omeriscool /cs/usr/omer/hujios/Ex3/testush/uniqueFolder /cs/usr/omer/hujios/Ex3/testush/uniqueFolder1 /cs/usr/omer/hujios/Ex3/testush/uniqueFolder2 /cs/usr/omer/hujios/Ex3/testush/uniqueFolder3 /cs/usr/omer/hujios/Ex3/testush/uniqueFolder4
 

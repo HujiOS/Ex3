@@ -17,7 +17,7 @@ const unsigned char isFile =0x8;
 
 class DName : public k1Base{
 private:
-    string _file;
+    const std::string _file;
 public:
     DName(string filename):_file(filename){}
     ~DName(){
@@ -26,8 +26,8 @@ public:
 
         return _file < ((DName&)other)._file;
     }
-    const char* get() const{
-        return _file.c_str();
+    const std::string& get(){
+        return _file;
     }
 };
 
@@ -39,15 +39,15 @@ public:
 
 class WordProto : public k2Base{
 private:
-    string _word;
+    const std::string _word;
 public:
     WordProto(string word):_word(word){};
     ~WordProto(){};
     bool operator<(const k2Base &other) const override{
-        return _word < ((WordProto&)other)._word;
+        return _word < ((WordProto&) other)._word;
     }
-    const char* get() const{
-        return _word.c_str();
+    const std::string& get(){
+        return _word;
     }
 };
 
@@ -71,14 +71,16 @@ public:
 
 class WordFinished : public k3Base{
 private:
-    string _word;
+    const std::string _word;
 public:
     WordFinished(string word):_word(word){};
     ~WordFinished(){};
-    bool operator<(const k3Base &other) const{
-        return _word < ((WordFinished&)other)._word;
+//    virtual bool operator<(const k2Base& other) const
+    virtual bool operator<(const k3Base &other) const{
+        WordFinished ot = ((WordFinished&)other);
+        return _word < ot.get();
     }
-    string get(){
+    const std::string& get(){
         return _word;
     }
 
@@ -107,7 +109,7 @@ public:
     void Map(const k1Base *const key, const v1Base *const val) const override{
         DIR *pDIR;
         struct dirent *entry;
-        if(pDIR=opendir(((DName*)key)->get()) ){
+        if(pDIR=opendir(((DName*)key)->get().c_str()) ){
             while(entry = readdir(pDIR)){
 
                 //if(entry -> d_type == isFile)
@@ -121,7 +123,6 @@ public:
                     ContainsSubstrList *c;
                     c = s.find(_substring) !=
                                 string::npos ? new ContainsSubstrList(true) : new ContainsSubstrList(false);
-
                     Emit2(word, c);
                 }
             }
@@ -130,9 +131,6 @@ public:
     };
 
     void Reduce(const k2Base *const key, const V2_VEC &vals) const override {
-        // TODO in the print we get weird symbols, we should check (probably here) which string we inserted in here..
-        std::cout << "ENTERED REDUCE" <<endl;
-
         int amnt = 0;
         for(v2Base* elem : vals)
         {
@@ -141,11 +139,15 @@ public:
                 amnt++;
             }
         }
-        WordFinished * word = new WordFinished(((WordProto*)key)->get());
-
-        std:: cout << "got " <<((WordProto*)key)->get() << " " << amnt <<endl;
+        if(amnt == 0){
+            return;
+        }
+        WordFinished *word = new  WordFinished(((WordProto*)key)->get());
         LastCounter *count = new LastCounter(amnt);
-
+        if(!word || !count){
+            cout << "BAD ALLOCATION!!!!!" << endl;
+            return;
+        }
         Emit3(word, count);
     }
 };
@@ -158,7 +160,6 @@ int main(int argc, char* argv[]){
 
     myNull* n = new myNull();
     for (int i = 2; i < argc; ++i) {
-        std::cout << "pushing !" << argv[i] << std::endl;
         v.push_back(std::pair<k1Base*, v1Base*>(new DName(argv[i]), n));
     }
 
@@ -176,9 +177,10 @@ int main(int argc, char* argv[]){
         {
             std::cout << ((WordFinished*)p.first) -> get() << " ";
         }
-        delete p .first;
+        delete p.first;
         delete p.second;
     }
+    std::cout << std::endl;
 
     return 0;
 }
