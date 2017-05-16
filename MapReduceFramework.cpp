@@ -228,6 +228,7 @@ struct my_cmp
 {
     bool operator() (std::shared_ptr<k2Base*> const a, std::shared_ptr<k2Base*> const b)
     {
+        // TODO fix this comparator.. (somehow :\) everything else should work.
         k2Base* aa = *a.get();
         k2Base* bb = *b.get();
         if(!(*aa < *bb) && !(*bb < *aa)){

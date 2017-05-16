@@ -34,7 +34,7 @@ void writeByFrequency(OUT_ITEMS_VEC& frequencies, std::ofstream& ofs)
     // writing results to file
     for (auto it = frequencies.begin(); it != frequencies.end(); ++it)
     {
-        std::cout << (*(Word*) it->first).getWord() << std::endl;
+//        std::cout << (*(Word*) it->first).getWord() << std::endl;
         const std::string& word = (*(Word*) it->first).getWord();
         int frequency = ((Integer*) it->second)->val;
         ofs << word;

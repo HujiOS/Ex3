@@ -55,7 +55,6 @@ public:
 
             col++;
         }
-        std::cout << count << std::endl;
     }
 
 
