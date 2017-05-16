@@ -20,8 +20,6 @@ private:
     const std::string _file;
 public:
     DName(string filename):_file(filename){}
-    ~DName(){
-    }
     bool operator<(const k1Base &other) const{
 
         return _file < ((DName&)other)._file;
@@ -34,7 +32,6 @@ public:
 class myNull : public v1Base{
 public:
     myNull(){};
-    ~myNull(){};
 };
 
 class WordProto : public k2Base{
@@ -42,7 +39,6 @@ private:
     const std::string _word;
 public:
     WordProto(string word):_word(word){};
-    ~WordProto(){};
     bool operator<(const k2Base &other) const override{
         return _word < ((WordProto&) other)._word;
     }
@@ -61,8 +57,6 @@ public:
     ContainsSubstrList(){
         _elem = false;
     };
-    ~ContainsSubstrList(){
-    };
 
     bool get_elem() const {
         return _elem;
@@ -74,7 +68,6 @@ private:
     const std::string _word;
 public:
     WordFinished(string word):_word(word){};
-    ~WordFinished(){};
 //    virtual bool operator<(const k2Base& other) const
     virtual bool operator<(const k3Base &other) const{
         WordFinished ot = ((WordFinished&)other);
@@ -91,7 +84,6 @@ private:
     int _counter = 0;
 public:
     LastCounter(int count):_counter(count){};
-    ~LastCounter(){};
 
     int get(){
         return _counter;
@@ -106,7 +98,7 @@ public:
     {
         _substring = sub;
     }
-    void Map(const k1Base *const key, const v1Base *const val) const override{
+    virtual void Map(const k1Base *const key, const v1Base *const val) const override{
         DIR *pDIR;
         struct dirent *entry;
         if(pDIR=opendir(((DName*)key)->get().c_str()) ){
@@ -130,9 +122,9 @@ public:
         }
     };
 
-    void Reduce(const k2Base *const key, const V2_VEC &vals) const override {
+    virtual void Reduce(const k2Base *const key, const V2_VEC &vals) const override {
         int amnt = 0;
-        for(v2Base* elem : vals)
+        for(auto &elem : vals)
         {
             if(((ContainsSubstrList*)elem)->get_elem())
             {
