@@ -7,7 +7,6 @@
 
 #include "GridKeysValues.hpp"
 
-
 class GridMapReduce : public MapReduceBase
 {
 public:
@@ -42,6 +41,7 @@ public:
         // find all points in this line with the maximum value
         // (all Row-King-Midgets)
         int col = 1;
+        int count = 0;
         while (sstream >> v)
         {
             if (v == max)
@@ -49,11 +49,14 @@ public:
                 // memory should be freed by the framework
                 Emit2(new Index(col),
                       new RowMaxVal(((Index*) key)->getIndex(), max));
+                count++;
             }
 
             col++;
         }
+        std::cout << count << std::endl;
     }
+
 
     /**
      *

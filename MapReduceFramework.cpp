@@ -9,6 +9,7 @@
 #include <fstream>
 #include <algorithm>
 #include <stdlib.h>
+#include <list>
 
 #define CHUNK 10
 #define err_msg1 "MapReduceFramework Failure: "
@@ -68,8 +69,9 @@ AFTER_SHUFFLE_VEC popv2Chunk(){
     pthread_mutex_unlock(&curr_in_mutex);
     return afterTempVec; // nullptr will mark that the vec was ended
 }
-
+static int emits = 0;
 void Emit2 (k2Base* k, v2Base* v){
+    emits++;
     // make sure that exec map wont try to add elements before the container init.
     while(Emit2ContainerProtection == 0){}
 
@@ -85,7 +87,7 @@ void Emit2 (k2Base* k, v2Base* v){
     // push (wake up shuffle to work!)
     sem_post(&ShuffleSemaphore); // increment semaphore.
     pthread_mutex_lock(&alloc_mutex);
-    it->second.push_back(TEMP_ITEM(k,v));
+    it->second.push_back(std::make_pair(k,v));
     pthread_mutex_unlock(&alloc_mutex);
 }
 
@@ -204,11 +206,12 @@ void *Shuffle(void *args){
     while(!joinEnded || semVal != 0){
         sem_getvalue(&ShuffleSemaphore, &semVal);
 		while(semVal == 0 && !joinEnded);
-        for(auto pairContainer : temp_elem_container){
-            for(auto k2v2pair : pairContainer.second){ // second is TEMP_ITEMS_VEC
+        for(auto pairContainer = temp_elem_container.begin(); pairContainer != temp_elem_container.end(); pairContainer++){
+            for(auto k2v2pair : pairContainer->second){ // second is TEMP_ITEMS_VEC
                 // check if this value already exists, if it is add it and than add
                 // the v2 to his vector
                 // otherwise just add it
+                deleted_items.push_back(k2v2pair);
                 if((vec = tempMap.find(k2v2pair.first)) == tempMap.end()){
                     tempMap.insert(std::pair<k2Base*, std::vector<v2Base*>>(k2v2pair.first, std::vector<v2Base*>()));
                     tempMap.find(k2v2pair.first)->second.push_back(k2v2pair.second);
@@ -217,15 +220,11 @@ void *Shuffle(void *args){
                 {
                     vec->second.push_back(k2v2pair.second);
                 }
-                deleted_items.push_back(k2v2pair);
                 sem_wait(&ShuffleSemaphore); // decrease the value of the semaphore for each finding
                 sem_getvalue(&ShuffleSemaphore, &semVal);
             }
-            if(deleted_items.begin() != deleted_items.end()){
-                // we want to delete the items that we found
-                for(auto elem : deleted_items){
-                    pairContainer.second.erase(std::remove(pairContainer.second.begin(), pairContainer.second.end(), elem), pairContainer.second.end());
-                }
+            if(deleted_items.size() != 0){
+                pairContainer->second.erase(deleted_items.begin(), deleted_items.end());
                 deleted_items.clear();
             }
         }
@@ -280,8 +279,6 @@ OUT_ITEMS_VEC RunMapReduceFramework(MapReduceBase& mapReduce, IN_ITEMS_VEC& item
         temp_elem_container.insert(std::pair<compThread, TEMP_ITEMS_VEC>((compThread)thread,TEMP_ITEMS_VEC()));
         threads.push_back(thread);
     }
-    pthread_t shuffleThread;
-    pthread_create(&shuffleThread, NULL, Shuffle, NULL);
 
 //    std::cout << "all threads created" << std::endl;
     Emit2ContainerProtection = 1; // enable emit2
@@ -291,6 +288,8 @@ OUT_ITEMS_VEC RunMapReduceFramework(MapReduceBase& mapReduce, IN_ITEMS_VEC& item
             exit(1);
         } // we dont use this ret value.
     }
+    pthread_t shuffleThread;
+    pthread_create(&shuffleThread, NULL, Shuffle, NULL);
     // we are sending this post in special cases that the
     // join ended
 
