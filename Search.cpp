@@ -78,7 +78,6 @@ public:
     bool operator<(const k3Base &other) const{
         return _word < ((WordFinished&)other)._word;
     }
-
     string get(){
         return _word;
     }
@@ -120,8 +119,8 @@ public:
                     string s(entry->d_name);
                     WordProto *word = new WordProto(s);
                     ContainsSubstrList *c;
-
-                    c = new ContainsSubstrList(s.find(substring) != string::npos);
+                    // TODO We have a problem with the string contain in file name mechanisem, please check it out (right now it takes every file from the list.. -- not good :D
+                    c = s.find(substring) != string::npos ? new ContainsSubstrList(true) : nullptr;
 
                     Emit2(word, c);
                 }
@@ -131,6 +130,7 @@ public:
     };
 
     void Reduce(const k2Base *const key, const V2_VEC &vals) const override {
+        // TODO in the print we get weird symbols, we should check (probably here) which string we inserted in here..
         int amnt = 0;
         for(v2Base* elem : vals)
         {
@@ -154,6 +154,7 @@ int main(int argc, char* argv[]){
 
     myNull* n = new myNull();
     for (int i = 2; i < argc; ++i) {
+        std::cout << "pushing !" << argv[i] << std::endl;
         v.push_back(std::pair<k1Base*, v1Base*>(new DName(argv[i]), n));
     }
 

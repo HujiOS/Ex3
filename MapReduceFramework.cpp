@@ -49,7 +49,7 @@ static pthread_mutex_t log_mutex = PTHREAD_MUTEX_INITIALIZER;
  */
 IN_ITEMS_VEC popv1Chunk(){
     pthread_mutex_lock(&curr_in_mutex);
-    size_t nextChunk = currInPos + CHUNK > in_items.size() ? currInPos - in_items.size() : CHUNK;
+    size_t nextChunk = currInPos + CHUNK > in_items.size() ? in_items.size() - currInPos : CHUNK;
     IN_ITEMS_VEC tempVec = IN_ITEMS_VEC(in_items.begin()+currInPos, in_items.begin()+(currInPos+nextChunk));
     currInPos += nextChunk;
     pthread_mutex_unlock(&curr_in_mutex);
@@ -58,22 +58,24 @@ IN_ITEMS_VEC popv1Chunk(){
 
 AFTER_SHUFFLE_VEC popv2Chunk(){
     pthread_mutex_lock(&curr_in_mutex);
-    size_t nextChunk = currInPos + CHUNK > after_shuffle_vec.size() ? currInPos - after_shuffle_vec.size() : CHUNK;
-    AFTER_SHUFFLE_VEC tempVec = AFTER_SHUFFLE_VEC(after_shuffle_vec.begin()+currInPos, after_shuffle_vec.begin()
+    size_t nextChunk = currInPos + CHUNK > after_shuffle_vec.size() ? after_shuffle_vec.size() - currInPos : CHUNK;
+    AFTER_SHUFFLE_VEC afterTempVec = AFTER_SHUFFLE_VEC(after_shuffle_vec.begin()+currInPos, after_shuffle_vec.begin()
                                                                                        +(currInPos+nextChunk));
     currInPos += nextChunk;
     pthread_mutex_unlock(&curr_in_mutex);
-    return tempVec; // nullptr will mark that the vec was ended
+    std::cout<<"Poping " << after_shuffle_vec.size() - currInPos<< std::endl;
+    return afterTempVec; // nullptr will mark that the vec was ended
 }
 
 void Emit2 (k2Base* k, v2Base* v){
     // make sure that exec map wont try to add elements before the container init.
     while(Emit2ContainerProtection == 0){}
+    if(v == nullptr){
+        return;
+    }
 
     // get thread container
     std::map<compThread, TEMP_ITEMS_VEC>::iterator it = temp_elem_container.find((compThread)pthread_self());
-
-    std::cout << "inEMIT2" << k << " " << v << std::endl;
 
     // handle container finding errors
     if(it == temp_elem_container.end()){
@@ -87,8 +89,9 @@ void Emit2 (k2Base* k, v2Base* v){
 }
 
 void Emit3 (k3Base* k, v3Base* v){
-    // just push..
-    // TODO something else?
+    if(k == nullptr || v == nullptr){
+        std::cout << "Nothing... " << std::endl;
+    }
     out_items.push_back(OUT_ITEM(k,v));
 }
 
@@ -176,12 +179,15 @@ void *ExecReduce(void *args){
     writeCreation("ExecReduce", true);
     MapReduceBase *baseFunc = (MapReduceBase *) args;
     AFTER_SHUFFLE_VEC getData = popv2Chunk();
+    std::cout << "Reduce create" << std::endl;
     while(getData.size() != 0){
         for(auto pair : getData){
             baseFunc->Reduce(pair.first, pair.second);
         }
+
         getData = popv2Chunk();
     }
+    std::cout << "Reduce end" << std::endl;
     writeCreation("ExecReduce", false);
     return nullptr;
 }
@@ -195,7 +201,7 @@ void *Shuffle(void *args){
     int semVal = 0;
     sem_getvalue(&ShuffleSemaphore, &semVal);
     while(!joinEnded || semVal != 0){
-        std::cout << "WHAHAHA" << std::endl;
+        std::cout << "Shuffled! semValue == "  << semVal << std::endl;
 		while(semVal == 0 && !joinEnded);
         for(auto pairContainer : temp_elem_container){
             TEMP_ITEMS_VEC deleted_items;
@@ -212,7 +218,11 @@ void *Shuffle(void *args){
                     vec->second.push_back(k2v2pair.second);
                 }
                 deleted_items.push_back(k2v2pair);
+                sem_getvalue(&ShuffleSemaphore, &semVal);
+//                std::cout << "Shuffled! semValue == "  << semVal << std::endl;
                 sem_wait(&ShuffleSemaphore); // decrease the value of the semaphore for each finding
+                sem_getvalue(&ShuffleSemaphore, &semVal);
+//                std::cout << "Shuffled! semValue == "  << semVal << std::endl;
             }
             // we want to delete the items that we found
             pairContainer.second.erase(deleted_items.begin(), deleted_items.end());
@@ -245,8 +255,8 @@ void deleteRemainsV2K2(bool deletev2){
 OUT_ITEMS_VEC RunMapReduceFramework(MapReduceBase& mapReduce, IN_ITEMS_VEC& itemsVec,
                                     int multiThreadLevel, bool autoDeleteV2K2){
     void* ret = NULL;
-
     openLogFile(multiThreadLevel);
+    in_items = itemsVec;
     // Running Map
     // save some vars
     std::vector<pthread_t> threads;
@@ -280,18 +290,17 @@ OUT_ITEMS_VEC RunMapReduceFramework(MapReduceBase& mapReduce, IN_ITEMS_VEC& item
         } // we dont use this ret value.
     }
     // we are sending this post in special cases that the
-    sem_post(&ShuffleSemaphore);
     // join ended
 
     std::cout << "all joined" << std::endl;
-
-
 
     joinEnded = true;
     if(pthread_join(shuffleThread, &ret)){
         std::cerr << err_msg1 << "pthread_join " << err_msg2 << std::endl;
         exit(1);
     }
+
+    std::cout << "Shuffle returned" << std::endl;
     threads.clear();
 
     double diff = timeElapsed();
@@ -321,5 +330,6 @@ OUT_ITEMS_VEC RunMapReduceFramework(MapReduceBase& mapReduce, IN_ITEMS_VEC& item
     std::cout << "finito" << std::endl;
 
     deleteRemainsV2K2(autoDeleteV2K2);
+    // TODO Sort out_items;
     return out_items;
 }
