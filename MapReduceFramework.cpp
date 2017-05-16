@@ -1,13 +1,14 @@
-#include <cstdio>
+#include <stdio.h>
 #include <map>
 #include <iostream>
 #include <mutex>
 #include <thread>
 #include <semaphore.h>
-#include <stdlib.h>
 #include "MapReduceFramework.h"
 #include <sys/time.h>
 #include <fstream>
+#include <algorithm>
+#include <stdlib.h>
 
 #define CHUNK 10
 #define err_msg1 "MapReduceFramework Failure: "
@@ -252,6 +253,7 @@ void deleteRemainsV2K2(bool deletev2){
 
 }
 
+
 OUT_ITEMS_VEC RunMapReduceFramework(MapReduceBase& mapReduce, IN_ITEMS_VEC& itemsVec,
                                     int multiThreadLevel, bool autoDeleteV2K2){
     void* ret = NULL;
@@ -327,9 +329,12 @@ OUT_ITEMS_VEC RunMapReduceFramework(MapReduceBase& mapReduce, IN_ITEMS_VEC& item
     diff = timeElapsed();
     printTime("Reduce", diff);
 
-    std::cout << "finito" << std::endl;
+    std::cout << "deleting" << std::endl;
 
     deleteRemainsV2K2(autoDeleteV2K2);
-    // TODO Sort out_items;
+    std::cout << "sorting" << std::endl;
+    std::sort(out_items.begin(), out_items.end(), [](auto a, auto b) { return *(a.first) < *(b.first); });
+    std::cout << "finito" << std::endl;
+    closeLogFile();
     return out_items;
 }

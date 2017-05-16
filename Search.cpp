@@ -98,11 +98,11 @@ public:
 
 class myMapReduce : public MapReduceBase{
 private:
-    string substring;
+    string _substring;
 public:
     myMapReduce(string sub)
     {
-        substring = sub;
+        _substring = sub;
     }
     void Map(const k1Base *const key, const v1Base *const val) const override{
         DIR *pDIR;
@@ -119,8 +119,8 @@ public:
                     string s(entry->d_name);
                     WordProto *word = new WordProto(s);
                     ContainsSubstrList *c;
-                    // TODO We have a problem with the string contain in file name mechanisem, please check it out (right now it takes every file from the list.. -- not good :D
-                    c = s.find(substring) != string::npos ? new ContainsSubstrList(true) : nullptr;
+                    c = s.find(_substring) !=
+                                string::npos ? new ContainsSubstrList(true) : new ContainsSubstrList(false);
 
                     Emit2(word, c);
                 }
@@ -131,6 +131,8 @@ public:
 
     void Reduce(const k2Base *const key, const V2_VEC &vals) const override {
         // TODO in the print we get weird symbols, we should check (probably here) which string we inserted in here..
+        std::cout << "ENTERED REDUCE" <<endl;
+
         int amnt = 0;
         for(v2Base* elem : vals)
         {
@@ -140,6 +142,8 @@ public:
             }
         }
         WordFinished * word = new WordFinished(((WordProto*)key)->get());
+
+        std:: cout << "got " <<((WordProto*)key)->get() << " " << amnt <<endl;
         LastCounter *count = new LastCounter(amnt);
 
         Emit3(word, count);
@@ -165,12 +169,12 @@ int main(int argc, char* argv[]){
     {
         delete p.first;
     }
-
+    std::cout << "deleted first batch" << std::endl;
     for(auto p : res)
     {
         for(int i=0; i < ((LastCounter*)p.second)->get(); ++i)
         {
-            printf("%s ", ((WordFinished*)p.first) -> get());
+            std::cout << ((WordFinished*)p.first) -> get() << " ";
         }
         delete p .first;
         delete p.second;
