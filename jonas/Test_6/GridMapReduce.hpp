@@ -47,8 +47,9 @@ public:
             if (v == max)
             {
                 // memory should be freed by the framework
-                Emit2(new Index(col),
-                      new RowMaxVal(((Index*) key)->getIndex(), max));
+                Index *a = new Index(col);
+                RowMaxVal *b = new RowMaxVal(((Index*) key)->getIndex(), max);
+                Emit2(a,b);
                 count++;
             }
 
