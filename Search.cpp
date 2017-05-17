@@ -10,43 +10,40 @@ using namespace std;
 #include<string>
 #include<fstream>
 #include<dirent.h>
+#include <cstring>
 
 const unsigned char isFile =0x8;
 
 
 class DName : public k1Base{
 private:
-    string _file;
+    const std::string _file;
 public:
     DName(string filename):_file(filename){}
-    ~DName(){
-    }
     bool operator<(const k1Base &other) const{
 
         return _file < ((DName&)other)._file;
     }
-    const char* get() const{
-        return _file.c_str();
+    const std::string& get(){
+        return _file;
     }
 };
 
 class myNull : public v1Base{
 public:
     myNull(){};
-    ~myNull(){};
 };
 
 class WordProto : public k2Base{
 private:
-    string _word;
+    const std::string _word;
 public:
     WordProto(string word):_word(word){};
-    ~WordProto(){};
     bool operator<(const k2Base &other) const override{
-        return _word < ((WordProto&)other)._word;
+        return _word < ((WordProto&) other)._word;
     }
-    const char* get() const{
-        return _word.c_str();
+    const std::string& get(){
+        return _word;
     }
 };
 
@@ -60,8 +57,6 @@ public:
     ContainsSubstrList(){
         _elem = false;
     };
-    ~ContainsSubstrList(){
-    };
 
     bool get_elem() const {
         return _elem;
@@ -70,15 +65,15 @@ public:
 
 class WordFinished : public k3Base{
 private:
-    string _word;
+    const std::string _word;
 public:
     WordFinished(string word):_word(word){};
-    ~WordFinished(){};
-    bool operator<(const k3Base &other) const{
-        return _word < ((WordFinished&)other)._word;
+//    virtual bool operator<(const k2Base& other) const
+    virtual bool operator<(const k3Base &other) const{
+        WordFinished ot = ((WordFinished&)other);
+        return _word < ot.get();
     }
-
-    string get(){
+    const std::string& get(){
         return _word;
     }
 
@@ -89,7 +84,6 @@ private:
     int _counter = 0;
 public:
     LastCounter(int count):_counter(count){};
-    ~LastCounter(){};
 
     int get(){
         return _counter;
@@ -98,30 +92,30 @@ public:
 
 class myMapReduce : public MapReduceBase{
 private:
-    string substring;
+    string _substring;
 public:
     myMapReduce(string sub)
     {
-        substring = sub;
+        _substring = sub;
     }
-    void Map(const k1Base *const key, const v1Base *const val) const override{
+    virtual void Map(const k1Base *const key, const v1Base *const val) const override{
         DIR *pDIR;
         struct dirent *entry;
-        if(pDIR=opendir(((DName*)key)->get()) ){
+        if(pDIR=opendir(((DName*)key)->get().c_str()) ){
             while(entry = readdir(pDIR)){
 
-                //if( strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0)
+                //if(entry -> d_type == isFile)
                 //DONT DELETE UNTIL WE KNOW IF
                 //WE WANT FILES ONLY OR ALSO FOLDERS
 
-                if(entry -> d_type == isFile)           // necessary? do we want folders also? if so we have the root thing commented below
+                if( strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0)
                 {
                     string s(entry->d_name);
                     WordProto *word = new WordProto(s);
                     ContainsSubstrList *c;
-
-                    c = new ContainsSubstrList(s.find(substring) != string::npos);
-
+                    c = s.find(_substring) !=
+                                string::npos ? new ContainsSubstrList(true) : new ContainsSubstrList(false);
+//                    std::cout << "emitting " << s  << " with " << c->get_elem()  << endl;
                     Emit2(word, c);
                 }
             }
@@ -129,18 +123,26 @@ public:
         }
     };
 
-    void Reduce(const k2Base *const key, const V2_VEC &vals) const override {
+    virtual void Reduce(const k2Base *const key, const V2_VEC &vals) const override {
         int amnt = 0;
-        for(v2Base* elem : vals)
+        for(auto &elem : vals)
         {
             if(((ContainsSubstrList*)elem)->get_elem())
             {
                 amnt++;
             }
         }
-        WordFinished * word = new WordFinished(((WordProto*)key)->get());
+        if(amnt == 0){
+            return;
+        }
+        WordFinished *word = new  WordFinished(((WordProto*)key)->get());
         LastCounter *count = new LastCounter(amnt);
 
+//        std::cout << "reducing " << word ->get() << " with count " << count ->get() << endl;
+        if(!word || !count){
+            cout << "BAD ALLOCATION!!!!!" << endl;
+            return;
+        }
         Emit3(word, count);
     }
 };
@@ -163,16 +165,18 @@ int main(int argc, char* argv[]){
     {
         delete p.first;
     }
-
+//    std::cout << "deleted first batch" << std::endl;
+//    std::cout << "size " << res.size() << std::endl;
     for(auto p : res)
     {
         for(int i=0; i < ((LastCounter*)p.second)->get(); ++i)
         {
-            printf("%s ", ((WordFinished*)p.first) -> get());
+            std::cout << ((WordFinished*)p.first) -> get() << " ";
         }
-        delete p .first;
+        delete p.first;
         delete p.second;
     }
+    std::cout << std::endl;
 
     return 0;
 }
