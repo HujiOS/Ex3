@@ -115,6 +115,7 @@ public:
                     ContainsSubstrList *c;
                     c = s.find(_substring) !=
                                 string::npos ? new ContainsSubstrList(true) : new ContainsSubstrList(false);
+//                    std::cout << "emitting " << s  << " with " << c->get_elem()  << endl;
                     Emit2(word, c);
                 }
             }
@@ -136,6 +137,8 @@ public:
         }
         WordFinished *word = new  WordFinished(((WordProto*)key)->get());
         LastCounter *count = new LastCounter(amnt);
+
+//        std::cout << "reducing " << word ->get() << " with count " << count ->get() << endl;
         if(!word || !count){
             cout << "BAD ALLOCATION!!!!!" << endl;
             return;
@@ -162,7 +165,8 @@ int main(int argc, char* argv[]){
     {
         delete p.first;
     }
-    std::cout << "deleted first batch" << std::endl;
+//    std::cout << "deleted first batch" << std::endl;
+//    std::cout << "size " << res.size() << std::endl;
     for(auto p : res)
     {
         for(int i=0; i < ((LastCounter*)p.second)->get(); ++i)

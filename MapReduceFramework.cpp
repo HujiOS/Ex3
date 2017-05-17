@@ -232,10 +232,9 @@ struct my_cmp
         k2Base* aa = *a.get();
         k2Base* bb = *b.get();
         if(!(*aa < *bb) && !(*bb < *aa)){
-            std::cout << "SUCCESSS";
+//            std::cout << "SUCCESSS"<<std::endl;
         }
-        std::cout<<std::endl;
-        return !(*aa < *bb) && !(*bb < *aa);
+        return (*aa < *bb);
     }
 };
 
@@ -365,6 +364,6 @@ OUT_ITEMS_VEC RunMapReduceFramework(MapReduceBase& mapReduce, IN_ITEMS_VEC& item
     std::sort(out_items.begin(), out_items.end(), [](OUT_ITEM a, OUT_ITEM b) {
         return *(a.first) < *(b.first); });
     closeLogFile();
-    std::cout << out_items.size() << " The size of the out items" << std::endl;
+//    std::cout << out_items.size() << " The size of the out items" << std::endl;
     return out_items;
 }
