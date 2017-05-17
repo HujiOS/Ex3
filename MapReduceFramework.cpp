@@ -381,6 +381,8 @@ OUT_ITEMS_VEC RunMapReduceFramework(MapReduceBase& mapReduce, IN_ITEMS_VEC& item
     // join ended
 
     joinEnded = true;
+    sem_post(&semiSemaphore); // because semi ha semaphore was on -1 all the time we need to
+    // increase his val.
     if(pthread_join(shuffleThread, &ret)){
         std::cerr << err_msg1 << "pthread_join " << err_msg2 << std::endl;
         exit(1);
