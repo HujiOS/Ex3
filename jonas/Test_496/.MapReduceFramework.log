@@ -600,3 +600,395 @@ Thread ExecReduce 0[17.5.2017 15:38:53]
 Thread ExecReduce 0[17.5.2017 15:38:53]
 Reduce took -1.49429e+12 ns
 RunMapReduceFramework finished
+RunMapReduceFramework started with 2 threads
+Thread ExecMap 1[20.5.2017 21:0:41]
+Thread ExecMap 1[20.5.2017 21:0:41]
+Thread Shuffle 1[20.5.2017 21:0:41]
+Thread ExecMap 0[20.5.2017 21:0:41]
+Thread ExecMap 0[20.5.2017 21:0:41]
+Thread Shuffle 0[20.5.2017 21:0:41]
+Map and Shuffle took -1.49493e+12 ns
+Thread ExecReduce 1[20.5.2017 21:0:41]
+Thread ExecReduce 1[20.5.2017 21:0:41]
+Thread ExecReduce 0[20.5.2017 21:0:41]
+Thread ExecReduce 0[20.5.2017 21:0:41]
+Reduce took -1.49493e+12 ns
+RunMapReduceFramework finished
+RunMapReduceFramework started with 2 threads
+Thread ExecMap 1[20.5.2017 21:0:41]
+Thread ExecMap 1[20.5.2017 21:0:41]
+Thread Shuffle 1[20.5.2017 21:0:41]
+Thread ExecMap 0[20.5.2017 21:0:41]
+Thread ExecMap 0[20.5.2017 21:0:41]
+Thread Shuffle 0[20.5.2017 21:0:41]
+Map and Shuffle took -1.49483e+12 ns
+Thread ExecReduce 1[20.5.2017 21:0:41]
+Thread ExecReduce 1[20.5.2017 21:0:41]
+Thread ExecReduce 0[20.5.2017 21:0:41]
+Thread ExecReduce 0[20.5.2017 21:0:41]
+Reduce took -1.49481e+12 ns
+RunMapReduceFramework finished
+RunMapReduceFramework started with 2 threads
+Thread Shuffle 1[20.5.2017 21:0:51]
+Thread ExecMap 1[20.5.2017 21:0:51]
+Thread ExecMap 1[20.5.2017 21:0:51]
+Thread ExecMap 0[20.5.2017 21:0:51]
+Thread ExecMap 0[20.5.2017 21:0:51]
+Thread Shuffle 0[20.5.2017 21:0:51]
+Map and Shuffle took -1.49452e+12 ns
+Thread ExecReduce 1[20.5.2017 21:0:51]
+Thread ExecReduce 1[20.5.2017 21:0:51]
+Thread ExecReduce 0[20.5.2017 21:0:51]
+Thread ExecReduce 0[20.5.2017 21:0:51]
+Reduce took -1.49452e+12 ns
+RunMapReduceFramework finished
+RunMapReduceFramework started with 2 threads
+Thread Shuffle 1[20.5.2017 21:0:51]
+Thread ExecMap 1[20.5.2017 21:0:51]
+Thread ExecMap 1[20.5.2017 21:0:51]
+Thread ExecMap 0[20.5.2017 21:0:51]
+Thread ExecMap 0[20.5.2017 21:0:51]
+Thread Shuffle 0[20.5.2017 21:0:51]
+Map and Shuffle took -1.49438e+12 ns
+Thread ExecReduce 1[20.5.2017 21:0:51]
+Thread ExecReduce 1[20.5.2017 21:0:51]
+Thread ExecReduce 0[20.5.2017 21:0:51]
+Thread ExecReduce 0[20.5.2017 21:0:51]
+Reduce took -1.49436e+12 ns
+RunMapReduceFramework finished
+RunMapReduceFramework started with 2 threads
+Thread ExecMap 1[20.5.2017 21:0:53]
+Thread ExecMap 1[20.5.2017 21:0:53]
+Thread Shuffle 1[20.5.2017 21:0:53]
+Thread ExecMap 0[20.5.2017 21:0:53]
+Thread ExecMap 0[20.5.2017 21:0:53]
+Thread Shuffle 0[20.5.2017 21:0:53]
+Map and Shuffle took -1.49509e+12 ns
+Thread ExecReduce 1[20.5.2017 21:0:53]
+Thread ExecReduce 0[20.5.2017 21:0:53]
+Thread ExecReduce 1[20.5.2017 21:0:53]
+Thread ExecReduce 0[20.5.2017 21:0:53]
+Reduce took -1.49508e+12 ns
+RunMapReduceFramework finished
+RunMapReduceFramework started with 2 threads
+Thread ExecMap 1[20.5.2017 21:0:53]
+Thread ExecMap 1[20.5.2017 21:0:53]
+Thread Shuffle 1[20.5.2017 21:0:53]
+Thread ExecMap 0[20.5.2017 21:0:53]
+Thread ExecMap 0[20.5.2017 21:0:53]
+Thread Shuffle 0[20.5.2017 21:0:53]
+Map and Shuffle took -1.49495e+12 ns
+Thread ExecReduce 1[20.5.2017 21:0:53]
+Thread ExecReduce 1[20.5.2017 21:0:53]
+Thread ExecReduce 0[20.5.2017 21:0:53]
+Thread ExecReduce 0[20.5.2017 21:0:53]
+Reduce took -1.49493e+12 ns
+RunMapReduceFramework finished
+RunMapReduceFramework started with 2 threads
+Thread ExecMap 1[20.5.2017 21:0:57]
+Thread ExecMap 1[20.5.2017 21:0:57]
+Thread Shuffle 1[20.5.2017 21:0:57]
+Thread ExecMap 0[20.5.2017 21:0:57]
+Thread ExecMap 0[20.5.2017 21:0:57]
+Thread Shuffle 0[20.5.2017 21:0:57]
+Map and Shuffle took -1.49489e+12 ns
+Thread ExecReduce 1[20.5.2017 21:0:57]
+Thread ExecReduce 1[20.5.2017 21:0:57]
+Thread ExecReduce 0[20.5.2017 21:0:57]
+Thread ExecReduce 0[20.5.2017 21:0:57]
+Reduce took -1.49489e+12 ns
+RunMapReduceFramework finished
+RunMapReduceFramework started with 2 threads
+Thread ExecMap 1[20.5.2017 21:0:57]
+Thread ExecMap 1[20.5.2017 21:0:57]
+Thread Shuffle 1[20.5.2017 21:0:57]
+Thread ExecMap 0[20.5.2017 21:0:57]
+Thread ExecMap 0[20.5.2017 21:0:57]
+Thread Shuffle 0[20.5.2017 21:0:57]
+Map and Shuffle took -1.49471e+12 ns
+Thread ExecReduce 1[20.5.2017 21:0:57]
+Thread ExecReduce 1[20.5.2017 21:0:57]
+Thread ExecReduce 0[20.5.2017 21:0:57]
+Thread ExecReduce 0[20.5.2017 21:0:57]
+Reduce took -1.4947e+12 ns
+RunMapReduceFramework finished
+RunMapReduceFramework started with 2 threads
+Thread ExecMap 1[20.5.2017 21:0:59]
+Thread Shuffle 1[20.5.2017 21:0:59]
+Thread ExecMap 1[20.5.2017 21:0:59]
+Thread ExecMap 0[20.5.2017 21:0:59]
+Thread ExecMap 0[20.5.2017 21:0:59]
+Thread Shuffle 0[20.5.2017 21:0:59]
+Map and Shuffle took -1.49467e+12 ns
+Thread ExecReduce 1[20.5.2017 21:0:59]
+Thread ExecReduce 1[20.5.2017 21:0:59]
+Thread ExecReduce 0[20.5.2017 21:0:59]
+Thread ExecReduce 0[20.5.2017 21:0:59]
+Reduce took -1.49467e+12 ns
+RunMapReduceFramework finished
+RunMapReduceFramework started with 2 threads
+Thread ExecMap 1[20.5.2017 21:0:59]
+Thread ExecMap 1[20.5.2017 21:0:59]
+Thread Shuffle 1[20.5.2017 21:0:59]
+Thread ExecMap 0[20.5.2017 21:0:59]
+Thread ExecMap 0[20.5.2017 21:0:59]
+Thread Shuffle 0[20.5.2017 21:0:59]
+Map and Shuffle took -1.49457e+12 ns
+Thread ExecReduce 1[20.5.2017 21:0:59]
+Thread ExecReduce 1[20.5.2017 21:0:59]
+Thread ExecReduce 0[20.5.2017 21:0:59]
+Thread ExecReduce 0[20.5.2017 21:0:59]
+Reduce took -1.49455e+12 ns
+RunMapReduceFramework finished
+RunMapReduceFramework started with 2 threads
+Thread ExecMap 1[20.5.2017 21:1:2]
+Thread ExecMap 1[20.5.2017 21:1:2]
+Thread Shuffle 1[20.5.2017 21:1:2]
+Thread ExecMap 0[20.5.2017 21:1:2]
+Thread ExecMap 0[20.5.2017 21:1:2]
+Thread Shuffle 0[20.5.2017 21:1:2]
+Map and Shuffle took -1.49486e+12 ns
+Thread ExecReduce 1[20.5.2017 21:1:2]
+Thread ExecReduce 1[20.5.2017 21:1:2]
+Thread ExecReduce 0[20.5.2017 21:1:2]
+Thread ExecReduce 0[20.5.2017 21:1:2]
+Reduce took -1.49486e+12 ns
+RunMapReduceFramework finished
+RunMapReduceFramework started with 2 threads
+Thread ExecMap 1[20.5.2017 21:1:2]
+Thread ExecMap 1[20.5.2017 21:1:2]
+Thread Shuffle 1[20.5.2017 21:1:2]
+Thread ExecMap 0[20.5.2017 21:1:2]
+Thread ExecMap 0[20.5.2017 21:1:2]
+Thread Shuffle 0[20.5.2017 21:1:2]
+Map and Shuffle took -1.49475e+12 ns
+Thread ExecReduce 1[20.5.2017 21:1:2]
+Thread ExecReduce 1[20.5.2017 21:1:2]
+Thread ExecReduce 0[20.5.2017 21:1:2]
+Thread ExecReduce 0[20.5.2017 21:1:2]
+Reduce took -1.49473e+12 ns
+RunMapReduceFramework finished
+RunMapReduceFramework started with 2 threads
+Thread ExecMap 1[20.5.2017 21:1:4]
+Thread ExecMap 1[20.5.2017 21:1:4]
+Thread Shuffle 1[20.5.2017 21:1:4]
+Thread ExecMap 0[20.5.2017 21:1:4]
+Thread ExecMap 0[20.5.2017 21:1:4]
+Thread Shuffle 0[20.5.2017 21:1:4]
+Map and Shuffle took -1.49513e+12 ns
+Thread ExecReduce 1[20.5.2017 21:1:4]
+Thread ExecReduce 1[20.5.2017 21:1:4]
+Thread ExecReduce 0[20.5.2017 21:1:4]
+Thread ExecReduce 0[20.5.2017 21:1:4]
+Reduce took -1.49513e+12 ns
+RunMapReduceFramework finished
+RunMapReduceFramework started with 2 threads
+Thread ExecMap 1[20.5.2017 21:1:4]
+Thread Shuffle 1[20.5.2017 21:1:4]
+Thread ExecMap 1[20.5.2017 21:1:4]
+Thread ExecMap 0[20.5.2017 21:1:4]
+Thread ExecMap 0[20.5.2017 21:1:4]
+Thread Shuffle 0[20.5.2017 21:1:4]
+Map and Shuffle took -1.49499e+12 ns
+Thread ExecReduce 1[20.5.2017 21:1:4]
+Thread ExecReduce 1[20.5.2017 21:1:4]
+Thread ExecReduce 0[20.5.2017 21:1:4]
+Thread ExecReduce 0[20.5.2017 21:1:4]
+Reduce took -1.49498e+12 ns
+RunMapReduceFramework finished
+RunMapReduceFramework started with 2 threads
+Thread ExecMap 1[20.5.2017 21:1:7]
+Thread ExecMap 1[20.5.2017 21:1:7]
+Thread Shuffle 1[20.5.2017 21:1:7]
+Thread ExecMap 0[20.5.2017 21:1:7]
+Thread ExecMap 0[20.5.2017 21:1:7]
+Thread Shuffle 0[20.5.2017 21:1:7]
+Map and Shuffle took -1.49511e+12 ns
+Thread ExecReduce 1[20.5.2017 21:1:7]
+Thread ExecReduce 1[20.5.2017 21:1:7]
+Thread ExecReduce 0[20.5.2017 21:1:7]
+Thread ExecReduce 0[20.5.2017 21:1:7]
+Reduce took -1.49511e+12 ns
+RunMapReduceFramework finished
+RunMapReduceFramework started with 2 threads
+Thread ExecMap 1[20.5.2017 21:1:7]
+Thread ExecMap 1[20.5.2017 21:1:7]
+Thread Shuffle 1[20.5.2017 21:1:7]
+Thread ExecMap 0[20.5.2017 21:1:7]
+Thread ExecMap 0[20.5.2017 21:1:7]
+Thread Shuffle 0[20.5.2017 21:1:7]
+Map and Shuffle took -1.49501e+12 ns
+Thread ExecReduce 1[20.5.2017 21:1:7]
+Thread ExecReduce 1[20.5.2017 21:1:7]
+Thread ExecReduce 0[20.5.2017 21:1:7]
+Thread ExecReduce 0[20.5.2017 21:1:7]
+Reduce took -1.49499e+12 ns
+RunMapReduceFramework finished
+RunMapReduceFramework started with 2 threads
+Thread ExecMap 1[20.5.2017 21:1:9]
+Thread ExecMap 1[20.5.2017 21:1:9]
+Thread Shuffle 1[20.5.2017 21:1:9]
+Thread ExecMap 0[20.5.2017 21:1:9]
+Thread ExecMap 0[20.5.2017 21:1:9]
+Thread Shuffle 0[20.5.2017 21:1:9]
+Map and Shuffle took -1.49499e+12 ns
+Thread ExecReduce 1[20.5.2017 21:1:9]
+Thread ExecReduce 0[20.5.2017 21:1:9]
+Thread ExecReduce 1[20.5.2017 21:1:9]
+Thread ExecReduce 0[20.5.2017 21:1:9]
+Reduce took -1.49499e+12 ns
+RunMapReduceFramework finished
+RunMapReduceFramework started with 2 threads
+Thread ExecMap 1[20.5.2017 21:1:9]
+Thread ExecMap 1[20.5.2017 21:1:9]
+Thread Shuffle 1[20.5.2017 21:1:9]
+Thread ExecMap 0[20.5.2017 21:1:9]
+Thread ExecMap 0[20.5.2017 21:1:9]
+Thread Shuffle 0[20.5.2017 21:1:9]
+Map and Shuffle took -1.49487e+12 ns
+Thread ExecReduce 1[20.5.2017 21:1:9]
+Thread ExecReduce 1[20.5.2017 21:1:9]
+Thread ExecReduce 0[20.5.2017 21:1:9]
+Thread ExecReduce 0[20.5.2017 21:1:9]
+Reduce took -1.49485e+12 ns
+RunMapReduceFramework finished
+RunMapReduceFramework started with 2 threads
+Thread Shuffle 1[20.5.2017 21:1:11]
+Thread ExecMap 1[20.5.2017 21:1:11]
+Thread ExecMap 1[20.5.2017 21:1:11]
+Thread ExecMap 0[20.5.2017 21:1:11]
+Thread ExecMap 0[20.5.2017 21:1:11]
+Thread Shuffle 0[20.5.2017 21:1:11]
+Map and Shuffle took -1.4946e+12 ns
+Thread ExecReduce 1[20.5.2017 21:1:11]
+Thread ExecReduce 0[20.5.2017 21:1:11]
+Thread ExecReduce 1[20.5.2017 21:1:11]
+Thread ExecReduce 0[20.5.2017 21:1:11]
+Reduce took -1.4946e+12 ns
+RunMapReduceFramework finished
+RunMapReduceFramework started with 2 threads
+Thread ExecMap 1[20.5.2017 21:1:11]
+Thread Shuffle 1[20.5.2017 21:1:11]
+Thread ExecMap 1[20.5.2017 21:1:11]
+Thread ExecMap 0[20.5.2017 21:1:11]
+Thread ExecMap 0[20.5.2017 21:1:11]
+Thread Shuffle 0[20.5.2017 21:1:11]
+Map and Shuffle took -1.49447e+12 ns
+Thread ExecReduce 1[20.5.2017 21:1:11]
+Thread ExecReduce 1[20.5.2017 21:1:11]
+Thread ExecReduce 0[20.5.2017 21:1:11]
+Thread ExecReduce 0[20.5.2017 21:1:11]
+Reduce took -1.49446e+12 ns
+RunMapReduceFramework finished
+RunMapReduceFramework started with 2 threads
+Thread ExecMap 1[20.5.2017 21:1:13]
+Thread ExecMap 1[20.5.2017 21:1:13]
+Thread Shuffle 1[20.5.2017 21:1:13]
+Thread ExecMap 0[20.5.2017 21:1:13]
+Thread ExecMap 0[20.5.2017 21:1:13]
+Thread Shuffle 0[20.5.2017 21:1:13]
+Map and Shuffle took -1.49473e+12 ns
+Thread ExecReduce 1[20.5.2017 21:1:13]
+Thread ExecReduce 1[20.5.2017 21:1:13]
+Thread ExecReduce 0[20.5.2017 21:1:13]
+Thread ExecReduce 0[20.5.2017 21:1:13]
+Reduce took -1.49473e+12 ns
+RunMapReduceFramework finished
+RunMapReduceFramework started with 2 threads
+Thread Shuffle 1[20.5.2017 21:1:13]
+Thread ExecMap 1[20.5.2017 21:1:13]
+Thread ExecMap 1[20.5.2017 21:1:13]
+Thread ExecMap 0[20.5.2017 21:1:13]
+Thread ExecMap 0[20.5.2017 21:1:13]
+Thread Shuffle 0[20.5.2017 21:1:13]
+Map and Shuffle took -1.49462e+12 ns
+Thread ExecReduce 1[20.5.2017 21:1:13]
+Thread ExecReduce 1[20.5.2017 21:1:13]
+Thread ExecReduce 0[20.5.2017 21:1:13]
+Thread ExecReduce 0[20.5.2017 21:1:13]
+Reduce took -1.4946e+12 ns
+RunMapReduceFramework finished
+RunMapReduceFramework started with 2 threads
+Thread ExecMap 1[20.5.2017 21:1:15]
+Thread Shuffle 1[20.5.2017 21:1:15]
+Thread ExecMap 1[20.5.2017 21:1:15]
+Thread ExecMap 0[20.5.2017 21:1:15]
+Thread ExecMap 0[20.5.2017 21:1:15]
+Thread Shuffle 0[20.5.2017 21:1:15]
+Map and Shuffle took -1.49477e+12 ns
+Thread ExecReduce 1[20.5.2017 21:1:15]
+Thread ExecReduce 0[20.5.2017 21:1:15]
+Thread ExecReduce 1[20.5.2017 21:1:15]
+Thread ExecReduce 0[20.5.2017 21:1:15]
+Reduce took -1.49477e+12 ns
+RunMapReduceFramework finished
+RunMapReduceFramework started with 2 threads
+Thread ExecMap 1[20.5.2017 21:1:15]
+Thread ExecMap 1[20.5.2017 21:1:15]
+Thread Shuffle 1[20.5.2017 21:1:15]
+Thread ExecMap 0[20.5.2017 21:1:15]
+Thread ExecMap 0[20.5.2017 21:1:15]
+Thread Shuffle 0[20.5.2017 21:1:15]
+Map and Shuffle took -1.49464e+12 ns
+Thread ExecReduce 1[20.5.2017 21:1:15]
+Thread ExecReduce 1[20.5.2017 21:1:15]
+Thread ExecReduce 0[20.5.2017 21:1:15]
+Thread ExecReduce 0[20.5.2017 21:1:15]
+Reduce took -1.49462e+12 ns
+RunMapReduceFramework finished
+RunMapReduceFramework started with 2 threads
+Thread ExecMap 1[20.5.2017 21:1:18]
+Thread ExecMap 1[20.5.2017 21:1:18]
+Thread Shuffle 1[20.5.2017 21:1:18]
+Thread ExecMap 0[20.5.2017 21:1:18]
+Thread ExecMap 0[20.5.2017 21:1:18]
+Thread Shuffle 0[20.5.2017 21:1:18]
+Map and Shuffle took -1.49523e+12 ns
+Thread ExecReduce 1[20.5.2017 21:1:18]
+Thread ExecReduce 0[20.5.2017 21:1:18]
+Thread ExecReduce 1[20.5.2017 21:1:18]
+Thread ExecReduce 0[20.5.2017 21:1:18]
+Reduce took -1.49523e+12 ns
+RunMapReduceFramework finished
+RunMapReduceFramework started with 2 threads
+Thread Shuffle 1[20.5.2017 21:1:18]
+Thread ExecMap 1[20.5.2017 21:1:18]
+Thread ExecMap 1[20.5.2017 21:1:18]
+Thread ExecMap 0[20.5.2017 21:1:18]
+Thread ExecMap 0[20.5.2017 21:1:18]
+Thread Shuffle 0[20.5.2017 21:1:18]
+Map and Shuffle took -1.49509e+12 ns
+Thread ExecReduce 1[20.5.2017 21:1:18]
+Thread ExecReduce 1[20.5.2017 21:1:18]
+Thread ExecReduce 0[20.5.2017 21:1:18]
+Thread ExecReduce 0[20.5.2017 21:1:18]
+Reduce took -1.49507e+12 ns
+RunMapReduceFramework finished
+RunMapReduceFramework started with 2 threads
+Thread ExecMap 1[20.5.2017 21:3:24]
+Thread ExecMap 1[20.5.2017 21:3:24]
+Thread Shuffle 1[20.5.2017 21:3:24]
+Thread ExecMap 0[20.5.2017 21:3:24]
+Thread ExecMap 0[20.5.2017 21:3:24]
+Thread Shuffle 0[20.5.2017 21:3:24]
+Map and Shuffle took -1.49432e+12 ns
+Thread ExecReduce 1[20.5.2017 21:3:24]
+Thread ExecReduce 1[20.5.2017 21:3:24]
+Thread ExecReduce 0[20.5.2017 21:3:24]
+Thread ExecReduce 0[20.5.2017 21:3:24]
+Reduce took -1.49431e+12 ns
+RunMapReduceFramework finished
+RunMapReduceFramework started with 2 threads
+Thread ExecMap 1[20.5.2017 21:3:24]
+Thread ExecMap 1[20.5.2017 21:3:24]
+Thread Shuffle 1[20.5.2017 21:3:24]
+Thread ExecMap 0[20.5.2017 21:3:25]
+Thread ExecMap 0[20.5.2017 21:3:25]
+Thread Shuffle 0[20.5.2017 21:3:25]
+Map and Shuffle took -1.49422e+12 ns
+Thread ExecReduce 1[20.5.2017 21:3:25]
+Thread ExecReduce 1[20.5.2017 21:3:25]
+Thread ExecReduce 0[20.5.2017 21:3:25]
+Thread ExecReduce 0[20.5.2017 21:3:25]
+Reduce took -1.49521e+12 ns
+RunMapReduceFramework finished

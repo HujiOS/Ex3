@@ -167,7 +167,7 @@ void writeCreation(std::string type, bool creation)
     struct tm * now = localtime(&t);
 
     pthread_mutex_lock(&log_mutex);
-    logf << "Thread " << type + " " << creation;
+    logf << "Thread " << type + " " << action;
     logf << "[" << now->tm_mday << "."
          << (now->tm_mon + 1) << "."
          <<  (now->tm_year + 1900) << " "
