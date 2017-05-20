@@ -32,5 +32,3 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 mappedDirs = map(lambda x: os.path.join(dir_path, x),DIRS)
 print('Search %s %s'%(searchString, ' '.join(mappedDirs)))
 print(' '.join(scores))
-
-
